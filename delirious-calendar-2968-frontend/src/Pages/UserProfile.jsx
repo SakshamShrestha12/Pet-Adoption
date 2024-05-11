@@ -1,11 +1,7 @@
 import { Box, Input, Text, useToast } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  FormControl,
-  FormLabel,
-  FormHelperText,
-} from "@chakra-ui/react";
+import { FormControl, FormLabel, FormHelperText } from "@chakra-ui/react";
 import { authContext } from "../context/AuthContext";
 
 export const UserProfile = () => {
@@ -16,13 +12,13 @@ export const UserProfile = () => {
     gender: "",
   });
 
-  let {AuthNameFunc} = useContext(authContext)
+  let { AuthNameFunc } = useContext(authContext);
 
-  const toast = useToast()
+  const toast = useToast();
 
-  let getUserData = ()=>{
+  let getUserData = () => {
     let token = JSON.parse(localStorage.getItem("token"));
-    fetch("https://cute-erin-tick-hat.cyclic.cloud/admin/users/get", {
+    fetch(" http://localhost:8080/admin/users/get", {
       method: "GET",
       headers: {
         Authorization: `bearer ${token}`,
@@ -34,10 +30,10 @@ export const UserProfile = () => {
         setData(res.users);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   useEffect(() => {
-    getUserData()
+    getUserData();
   }, []);
 
   const handleInputChange = (e) => {
@@ -54,8 +50,7 @@ export const UserProfile = () => {
     let token = JSON.parse(localStorage.getItem("token"));
 
     // The endpoint URL for updating user data
-    const updateUserEndpoint =
-      "https://cute-erin-tick-hat.cyclic.cloud/user/patch";
+    const updateUserEndpoint = " http://localhost:8080/user/patch";
 
     // Assuming the API expects a PATCH request with the updated data in the "data" variable.
     // You may need to adjust the API endpoint and data structure based on your specific backend requirements.
@@ -76,14 +71,14 @@ export const UserProfile = () => {
       )
       .then((response) => {
         toast({
-            title: response.data.message,
-            status: 'success',
-            duration: 2000,
-            isClosable: true,
-        })
+          title: response.data.message,
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
         console.log("User data updated successfully:", response.data);
-        getUserData()
-        AuthNameFunc(data.name)
+        getUserData();
+        AuthNameFunc(data.name);
         // Add any success handling logic here (e.g., show a success message).
       })
       .catch((error) => {
@@ -103,21 +98,43 @@ export const UserProfile = () => {
         padding="20px"
         mt="120px"
       >
-        <FormControl >
+        <FormControl>
           <FormLabel mt="15px">User Name</FormLabel>
-          <Input type="text" placeholder="Name" value={data.name} name="name" onChange={handleInputChange} />
+          <Input
+            type="text"
+            placeholder="Name"
+            value={data.name}
+            name="name"
+            onChange={handleInputChange}
+          />
           <FormHelperText>We'll never share your Name.</FormHelperText>
 
           <FormLabel mt="15px">Email Address</FormLabel>
-          <Input type="email" placeholder="Email" value={data.email} name="email" onChange={handleInputChange} />
+          <Input
+            type="email"
+            placeholder="Email"
+            value={data.email}
+            name="email"
+            onChange={handleInputChange}
+          />
           <FormHelperText>We'll never share your email.</FormHelperText>
 
           <FormLabel mt="15px">User Location</FormLabel>
-          <Input type="text" placeholder="Location" value={data.location} name="location" onChange={handleInputChange} />
+          <Input
+            type="text"
+            placeholder="Location"
+            value={data.location}
+            name="location"
+            onChange={handleInputChange}
+          />
           <FormHelperText>We'll never share your Location.</FormHelperText>
 
           <FormLabel mt="15px">User Gender</FormLabel>
-          <select value={data.gender} name="gender" onChange={handleInputChange}>
+          <select
+            value={data.gender}
+            name="gender"
+            onChange={handleInputChange}
+          >
             <option value="">Select</option>
             <option value="male">Male</option>
             <option value="female">Female</option>

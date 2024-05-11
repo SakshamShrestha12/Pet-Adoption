@@ -1,7 +1,7 @@
-const express = require('express');
-const CatsModel = require('../Model/CatsModel');
+const express = require("express");
+const CatsModel = require("../Model/CatsModel");
 
-const catsRoute = express.Router()
+const catsRoute = express.Router();
 
 catsRoute.get("/get", async (req, res) => {
   try {
@@ -49,76 +49,56 @@ catsRoute.get("/get", async (req, res) => {
   }
 });
 
-
-
-catsRoute.get("/get/:id", async(req,res)=>{
-
+catsRoute.get("/get/:id", async (req, res) => {
   try {
+    const { id } = req.params;
 
-    const {id} = req.params
+    const cat = await CatsModel.findById(id);
 
-    const cat = await CatsModel.findById(id)
-
-    res.json({cats:cat})
-    
+    res.json({ cats: cat });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
-})
-
+});
 
 // admin side
-catsRoute.post("/add", async(req,res)=>{
-    
-    try {
+catsRoute.post("/add", async (req, res) => {
+  try {
+    const updatedCats = CatsModel(req.body);
 
-        const updatedCats = CatsModel(req.body)
+    await updatedCats.save();
 
-        await updatedCats.save()
-
-        res.json({updatedCats : updatedCats})
-        
-    } catch (error) {
-        res.status(500).json({error:"Internal Server Error"})
-    }
-
-})
-
+    res.json({ updatedCats: updatedCats });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 // admin side
-catsRoute.patch("/patch/:id", async(req,res)=>{
+catsRoute.patch("/patch/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
 
-    try {
+    const updatedcats = await CatsModel.findByIdAndUpdate(id, req.body);
 
-        const {id} = req.params
-
-        const updatedcats = await CatsModel.findByIdAndUpdate(id, req.body)
-
-        res.json({message:"Updated cats"})
-        
-    } catch (error) {
-        res.status(500).json({error:"Internal Server Error"})
-    }
-
-})
+    res.json({ message: "Updated cats" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 // admin side
-catsRoute.delete("/delete/:id", async(req,res)=>{
+catsRoute.delete("/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
 
-    try {
+    const updatedcats = await CatsModel.findByIdAndDelete(id);
 
-        const {id} = req.params
+    res.json({ message: "Deleted cats" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
-        const updatedcats = await CatsModel.findByIdAndDelete(id)
-
-        res.json({message:"Deleted cats"})
-        
-    } catch (error) {
-        res.status(500).json({error:"Internal Server Error"})
-    }
-
-})
-  
-
-module.exports = catsRoute
+module.exports = catsRoute;
